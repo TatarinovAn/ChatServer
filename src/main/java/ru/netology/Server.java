@@ -6,22 +6,36 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Server {
-    private static final int PORT = 8080;
+    private int port;
     private ArrayList<ClientHandler> clients = new ArrayList<>();
 
-    public Server() {
+    public void sendMessageToAllClient(String message) {
+        for (ClientHandler entry : clients) {
+            entry.sendMsg(message);
+        }
+    }
+    public Server () {
+
+    }
+
+    public void start() {
         Socket clientSocket = null;
-        File file = new File("D://Chat/Setting"); // Создание файла настроек
-        file.mkdirs();
-        try (FileWriter writer = new FileWriter("D://Chat/Setting/setting.txt", false)) {
-            writer.write(Integer.toString(PORT));
-            writer.flush();
+
+        StringBuffer sb = new StringBuffer();
+        try (FileReader reader = new FileReader("setting.txt")) {
+            int c;
+            while ((c = reader.read()) != -1) {
+                sb.append((char) c);
+            }
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+            System.out.println("Ошибка в чтении");
         }
 
+        this.port = Integer.parseInt(sb.toString());
 
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) // подключение сервера
+
+        try (ServerSocket serverSocket = new ServerSocket(port)) // подключение сервера
         {
             System.out.println("Server Start");
 
@@ -34,12 +48,6 @@ public class Server {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-    }
-
-    public void sendMessageToAllClient(String message) {
-        for (ClientHandler entry : clients) {
-            entry.sendMsg(message);
         }
     }
 

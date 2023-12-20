@@ -1,6 +1,5 @@
 package ru.netology;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,9 +40,8 @@ public class ClientHandler implements Runnable {
                     if (clientMessage.contains("/exit")) {
                         break;
                     }
-                    File fileChat = new File("D://Chat/Mes_Server"); // Создание файла сообщений
-                    fileChat.mkdirs();
-                    try (FileWriter writer = new FileWriter("D://Chat/Mes_Server/mes.txt", true)) {
+
+                    try (FileWriter writer = new FileWriter("message.txt", true)) {
                         writer.write(clientMessage);
                         writer.append('\n');
                         writer.flush();
